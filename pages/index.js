@@ -25,7 +25,7 @@ const Home = ({data}) => {
             dynamicStyles.sheet.insertRule(body, dynamicStyles.length);
         }
 
-        for (var i = 1; i <= getList; i++) {
+        for (var i = 0; i <= getList; i++) {
             if (i % 2 == 0) {
                 addAnimation(`
       @keyframes movement${i} { 
