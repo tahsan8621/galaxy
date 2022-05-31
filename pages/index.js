@@ -1,7 +1,15 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
+import axios from "axios";
 
-const Home = () => {
-    useEffect(() => {
+const Home = ({data}) => {
+    const [user, setUser] = useState([])
+
+
+    useEffect( () => {
+
+        const newUserData=data.devices;
+        setUser(newUserData)
+        console.log(user[0]?.name)
         let getList = document.getElementById("user").innerText;
 
 
@@ -40,21 +48,30 @@ const Home = () => {
             var element = document.createElement("div");
             element.className = "globe ele-1";
             element.style.animation = `7s linear infinite movement${i}`;
-            element.textContent=`user-${i}`;
+            element.textContent = `${user[i]?.name}`;
             document.getElementById("atom").appendChild(element);
         }
-    }, []);
+    });
 
     return (
 
         <div id="atom">
             Currently Active
             <div id="user">
-                10
+                {user.length}
             </div>
 
 
         </div>);
 
+}
+
+export async function getServerSideProps() {
+    // Fetch data from external API
+    const res = await fetch(`http://35.201.2.209:8000/devices`)
+    const data = await res.json()
+    console.log(data.devices)
+    // Pass data to the page via props
+    return { props: { data } }
 }
 export default Home;
