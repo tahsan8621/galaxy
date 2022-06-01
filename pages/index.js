@@ -5,9 +5,8 @@ const Home = ({data}) => {
     const [user, setUser] = useState([])
 
 
-
     useEffect(() => {
-        setUser(data)
+        setUser(data.devices)
         // (1) define within effect callback scope
         const fetchData = async () => {
             try {
@@ -29,7 +28,6 @@ const Home = ({data}) => {
         return () => clearInterval(id);
     }, [])
     useEffect(() => {
-
         let getList = document.getElementById("user").innerText;
 
 
@@ -60,10 +58,7 @@ const Home = ({data}) => {
         });
 
         for (var i = 1; i <= getList; i++) {
-            const list = document.getElementsByClassName("globe");
-            if (list.length > 0) {
-                console.log(list)
-            }
+
             if (i % 2 == 0) {
                 addAnimation(`
                   @keyframes movement_${i} {
