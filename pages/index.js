@@ -6,13 +6,37 @@ const Home = ({data}) => {
 
 
     useEffect(() => {
-        const newUserData = data.devices;
-        setUser(newUserData)
+        // (1) define within effect callback scope
+        const fetchData = async () => {
+            try {
+
+                const res = await fetch('http://35.201.2.209:8000/devices');
+                const json = await res.json();
+                setUser(json.devices);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        const id = setInterval(() => {
+            fetchData(); // <-- (3) invoke in interval callback
+        }, 6000);
+
+        fetchData(); // <-- (2) invoke on mount
+
+        return () => clearInterval(id);
+    }, [])
+    useEffect(() => {
+
+
         console.log(user[0]?.name)
         let getList = document.getElementById("user").innerText;
 
 
         let dynamicStyles = null;
+
+        //list.removeChild(list.children[1]);
+
 
         function addAnimation(body) {
             if (!dynamicStyles) {
@@ -24,7 +48,22 @@ const Home = ({data}) => {
             dynamicStyles.sheet.insertRule(body, dynamicStyles.length);
         }
 
+        // const list = document.getElementById("atom");
+        //
+        // if (list.hasChildNodes()) {
+        //     list.removeChild(list.children[0]);
+        // }
+        const boxes = document.querySelectorAll('.globe');
+
+        boxes.forEach(box => {
+            box.remove();
+        });
+
         for (var i = 1; i <= getList; i++) {
+            const list = document.getElementsByClassName("globe");
+            if (list.length > 0) {
+                console.log(list)
+            }
             if (i % 2 == 0) {
                 addAnimation(`
                   @keyframes movement_${i} {
@@ -47,7 +86,8 @@ const Home = ({data}) => {
             var element = document.createElement("div");
             element.className = "globe";
             element.style.animation = `7s linear infinite movement_${i}`;
-            element.textContent = `${user[i-1]?.name}`;
+            element.textContent = `${user[i - 1]?.name}`;
+
             document.getElementById("atom").appendChild(element);
         }
     });
@@ -64,17 +104,11 @@ const Home = ({data}) => {
         </div>);
 
 }
-
-export async function getServerSideProps() {
-
-
-    // Fetch data from external API
-    const res = await fetch(`http://35.201.2.209:8000/devices`)
-    //setInterval(res, 1000);
-    const data = await res.json()
-    console.log(data.devices)
-    // Pass data to the page via props
-    return {props: {data}}
+Home.getInitialProps = async (ctx) => {
+    const res = await fetch('http://35.201.2.209:8000/devices')
+    const json = await res.json()
+    return {data: json}
 }
+
 
 export default Home;
