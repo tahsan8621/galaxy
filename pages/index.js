@@ -5,7 +5,9 @@ const Home = ({data}) => {
     const [user, setUser] = useState([])
 
 
+
     useEffect(() => {
+        setUser(data)
         // (1) define within effect callback scope
         const fetchData = async () => {
             try {
@@ -28,8 +30,6 @@ const Home = ({data}) => {
     }, [])
     useEffect(() => {
 
-
-        console.log(user[0]?.name)
         let getList = document.getElementById("user").innerText;
 
 
