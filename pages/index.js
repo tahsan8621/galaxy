@@ -25,29 +25,29 @@ const Home = ({data}) => {
             dynamicStyles.sheet.insertRule(body, dynamicStyles.length);
         }
 
-        for (var i = 0; i <= getList; i++) {
+        for (var i = 0; i < getList; i++) {
             if (i % 2 == 0) {
                 addAnimation(`
-      @keyframes movement${i} { 
-         0%  { -webkit-transform: rotate(0deg) translateY(${100 * i}px) rotate(0deg) scale(1); }
-      50%  { -webkit-transform: rotate(-180deg) translateY(${100 * i}px) rotate(180deg) scale(1); }
-      100%  { -webkit-transform: rotate(-360deg) translateY(${100 * i}px) rotate(360deg) scale(1); }
-      }
-    `);
+                  @keyframes movement_${i} { 
+                     0%  { -webkit-transform: rotate(0deg) translateY(${100 * i}px) rotate(0deg) scale(1); }
+                  50%  { -webkit-transform: rotate(-180deg) translateY(${100 * i}px) rotate(180deg) scale(1); }
+                  100%  { -webkit-transform: rotate(-360deg) translateY(${100 * i}px) rotate(360deg) scale(1); }
+                  }
+                `);
             } else {
                 addAnimation(`
-      @keyframes movement${i} { 
-         0%  { -webkit-transform: rotate(0deg) translateY(${100 * i}px) rotate(0deg) scale(1); }
-      50%  { -webkit-transform: rotate(180deg) translateY(${100 * i}px) rotate(-180deg) scale(1); }
-      100%  { -webkit-transform: rotate(360deg) translateY(${100 * i}px) rotate(-360deg) scale(1); }
-      }
-    `);
+                  @keyframes movement_${i} { 
+                     0%  { -webkit-transform: rotate(0deg) translateY(${100 * i}px) rotate(0deg) scale(1); }
+                  50%  { -webkit-transform: rotate(180deg) translateY(${100 * i}px) rotate(-180deg) scale(1); }
+                  100%  { -webkit-transform: rotate(360deg) translateY(${100 * i}px) rotate(-360deg) scale(1); }
+                  }
+                `);
             }
 
 
             var element = document.createElement("div");
             element.className = "globe ele-1";
-            element.style.animation = `7s linear infinite movement${i}`;
+            element.style.animation = `7s linear infinite movement_${i}`;
             element.textContent = `${user[i]?.name}`;
             document.getElementById("atom").appendChild(element);
         }
