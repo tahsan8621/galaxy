@@ -12,19 +12,21 @@ const Login = () => {
     if (typeof window !== 'undefined') {
         const token = localStorage.getItem("token");
         if (token) {
-            return router.push('http://localhost:3001')
+            return router.push('/')
         }
     }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const res = await fetch('http://35.201.2.209:8000/login', {
+
+        const res = await fetch(`${process.env.API_END_POINT}/login`, {
             method: 'post', headers: {
                 'Content-type': 'application/json'
             }, body: JSON.stringify({email, password})
         })
 
         if (res.status == 200) {
-            const token="tdasfasdf1212SDFGHJ"
+            const token = "tdasfasdf1212SDFGHJ"
             window.localStorage.setItem('token', token);
             router.push('/')
         } else {

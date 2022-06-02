@@ -11,21 +11,20 @@ const Home = ({data}) => {
     const handleLogout = (e) => {
         e.preventDefault()
         localStorage.setItem("token", '');
-        return route.push('http://localhost:3001/login')
+        return route.push('/login')
     }
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
             const token = localStorage.getItem("token");
             if (!token) {
-                return route.push('http://localhost:3001/login')
+                return route.push('/login')
             }
         }
         setUser(data.devices)
         const fetchData = async () => {
             try {
-
-                const res = await fetch('http://35.201.2.209:8000/devices');
+                const res = await fetch(`${process.env.API_END_POINT}/devices`);
                 const json = await res.json();
                 setUser(json.devices);
             } catch (error) {
