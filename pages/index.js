@@ -1,13 +1,27 @@
 import React, {useEffect, useState} from 'react';
 import axios from "axios";
+import {NextResponse} from "next/server";
+import {useRouter} from "next/router";
+import Button from "../components/Button";
 
 const Home = ({data}) => {
+    const route = useRouter()
     const [user, setUser] = useState([])
 
+    const handleLogout = (e) => {
+        e.preventDefault()
+        localStorage.setItem("token", '');
+        return route.push('http://localhost:3001/login')
+    }
 
     useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                return route.push('http://localhost:3001/login')
+            }
+        }
         setUser(data.devices)
-        // (1) define within effect callback scope
         const fetchData = async () => {
             try {
 
@@ -20,22 +34,16 @@ const Home = ({data}) => {
         };
 
         const id = setInterval(() => {
-            fetchData(); // <-- (3) invoke in interval callback
+            fetchData(); // <--  invoke in interval callback
         }, 6000);
 
-        fetchData(); // <-- (2) invoke on mount
+        fetchData(); // <--  invoke on mount
 
         return () => clearInterval(id);
     }, [])
     useEffect(() => {
-        let getList = document.getElementById("user").innerText;
-
-
+        let getList = user.length;
         let dynamicStyles = null;
-
-        //list.removeChild(list.children[1]);
-
-
         function addAnimation(body) {
             if (!dynamicStyles) {
                 dynamicStyles = document.createElement('style');
@@ -45,19 +53,11 @@ const Home = ({data}) => {
 
             dynamicStyles.sheet.insertRule(body, dynamicStyles.length);
         }
-
-        // const list = document.getElementById("atom");
-        //
-        // if (list.hasChildNodes()) {
-        //     list.removeChild(list.children[0]);
-        // }
         const boxes = document.querySelectorAll('.globe');
-
         boxes.forEach(box => {
             box.remove();
         });
-
-        for (var i = 1; i <= getList; i++) {
+        for (let i = 1; i <= getList; i++) {
 
             if (i % 2 == 0) {
                 addAnimation(`
@@ -78,25 +78,33 @@ const Home = ({data}) => {
             }
 
 
-            var element = document.createElement("div");
+            let element = document.createElement("div");
             element.className = "globe";
             element.style.animation = `7s linear infinite movement_${i}`;
-            element.textContent = `${user[i - 1]?.name}`;
 
             document.getElementById("atom").appendChild(element);
         }
     });
 
     return (
-
-        <div id="atom">
-            Currently Active
-            <div id="user">
-                {user.length}
+        <div className="bg-orange">
+            <div id="atom">
+                <div id="user">
+                    <h2>{user.length}</h2>
+                    <span>DEVICES ONLINE</span>
+                </div>
             </div>
 
+            <footer className="footer d-flex j-cc">
+                <div className="">
+                    <button type="submit" className="btn btn-bg-default mg-r">Notify</button>
+                    <button type="submit" className="btn btn-bg-dark" onClick={handleLogout}>log out</button>
+                </div>
+            </footer>
 
-        </div>);
+
+        </div>
+    );
 
 }
 Home.getInitialProps = async (ctx) => {
