@@ -18,21 +18,28 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        const res = await fetch(`${process.env.API_END_POINT}/login`, {
+        const res = fetch(`${process.env.API_END_POINT}/login`, {
             method: 'post', headers: {
                 'Content-type': 'application/json'
             }, body: JSON.stringify({email, password})
         })
+            .then((response) => response.text())
+            .then((token) => {
+                return token;
+            });
 
-        if (res.status == 200) {
-            const token = "tdasfasdf1212SDFGHJ"
+
+        const token = await res;
+
+        console.log(token)
+        if (token != "Invalid email and password combination") {
+
             window.localStorage.setItem('token', token);
             router.push('/')
-        } else {
+        }
+         else {
             setError('invalid credentials')
         }
-
 
     }
     return (<>
