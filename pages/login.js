@@ -9,12 +9,6 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('')
-    if (typeof window !== 'undefined') {
-        const token = localStorage.getItem("token");
-        if (token) {
-            return router.push('/')
-        }
-    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -27,15 +21,12 @@ const Login = () => {
             .then((token) => {
                 return token;
             });
-
-
         const token = await res;
 
-        console.log(token)
         if (token != "Invalid email and password combination") {
 
             window.localStorage.setItem('token', token);
-            router.push('/')
+           return  router.push('/')
         }
          else {
             setError('invalid credentials')

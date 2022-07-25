@@ -1,32 +1,26 @@
 import React, {useEffect, useState} from 'react';
-import axios from "axios";
-import {NextResponse} from "next/server";
 import {useRouter} from "next/router";
-import Button from "../components/Button";
 
-const Home = ({data}) => {
-    const route = useRouter()
+const Home = () => {
+    const router = useRouter()
     const [user, setUser] = useState([])
 
     const handleLogout = (e) => {
         e.preventDefault()
         localStorage.setItem("token", '');
-        return route.push('/login')
+        router.push('/login')
     }
-
     useEffect(() => {
-        if (typeof window !== 'undefined') {
-            const token = localStorage.getItem("token");
-            if (!token) {
-                return route.push('/login')
-            }
+        let token = localStorage.getItem("token");
+        if (token && token != "undefined") {
+        } else {
+            router.push("/login");
         }
-        setUser(data.devices)
         const fetchData = async () => {
             try {
                 const res = await fetch(`${process.env.API_END_POINT}/devices`);
                 const json = await res.json();
-                setUser(json.devices);
+                setUser(json?.devices);
             } catch (error) {
                 console.log(error);
             }
@@ -43,6 +37,7 @@ const Home = ({data}) => {
     useEffect(() => {
         let getList = user.length;
         let dynamicStyles = null;
+
         function addAnimation(body) {
             if (!dynamicStyles) {
                 dynamicStyles = document.createElement('style');
@@ -52,6 +47,7 @@ const Home = ({data}) => {
 
             dynamicStyles.sheet.insertRule(body, dynamicStyles.length);
         }
+
         const boxes = document.querySelectorAll('.globe');
         boxes.forEach(box => {
             box.remove();
@@ -105,11 +101,6 @@ const Home = ({data}) => {
         </div>
     );
 
-}
-Home.getInitialProps = async (ctx) => {
-    const res = await fetch('http://35.201.2.209:8000/devices')
-    const json = await res.json()
-    return {data: json}
 }
 
 
